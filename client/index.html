@@ -1,0 +1,37 @@
+<!doctype>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <title>climbHigh</title>
+        <!-- Load Vue followed by Vue Router -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+          <header>
+            <h1>Efrei Books</h1>
+          </header>
+          <main>
+            <router-view
+              :articles="articles"
+              :panier="panier"
+              @add-article="addArticle"
+              @delete-article="deleteArticle"
+              @update-article="updateArticle"
+            ></router-view>
+          </main>
+        </div>
+        <script src="/vue-application.js"></script>
+    </body>
+</html>
+<style>
+header{
+  font-family:monospace;
+  font-size: 150%;
+  text-align: center;
+	filter: drop-shadow(10px 10px 10px black);
+}
+</style>
