@@ -1,11 +1,14 @@
 const Home = window.httpVueLoader('./components/Home.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Connexion = window.httpVueLoader('./components/Connexion.vue')
+const Livres = window.httpVueLoader('./components/Livres.vue')
 
 
 const routes = [
   { path: '/', component: Connexion },
-  { path: '/panier', component: Panier },
+  { path: '/Home', component: Home },
+  { path: '/Home/panier', component: Panier },
+  { path: '/Home/Livres', component: Livres }
 ]
 
 const router = new VueRouter({

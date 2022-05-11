@@ -6,8 +6,8 @@
 				<input type="password" id="Password" class="button" name="Password" placeholder="Password" required> 
 			</div>
 			<br>
-            <input type="submit" class="button" id="Create" value="Create account" onclick="create()" @onclick="phototest">
-			<input type="submit" class="button" id="Connexion" value="Connexion             " onclick="connex()" >
+            <input type="submit" class="button" id="Create" value="Create account" >
+			<input type="submit" class="button" id="Connexion" value="Connexion             "  >
 		</form>
     </Body>
 </template>

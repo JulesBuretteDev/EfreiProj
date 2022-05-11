@@ -2,7 +2,7 @@
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title>climbHigh</title>
+        <title>EfreiBooks</title>
         <!-- Load Vue followed by Vue Router -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
@@ -14,13 +14,14 @@
           <header>
             <h1>Efrei Books</h1>
           </header>
+          <nav>
+            <router-link to="/home/livres">livres</router-link>
+            <router-link to="/home/panier">Panier</router-link>
+            <router-link to="/">Deconnexion</router-link>
+          </nav>
           <main>
             <router-view
               :articles="articles"
-              :panier="panier"
-              @add-article="addArticle"
-              @delete-article="deleteArticle"
-              @update-article="updateArticle"
             ></router-view>
           </main>
         </div>
