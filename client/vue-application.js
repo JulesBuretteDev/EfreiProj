@@ -1,14 +1,17 @@
+
 const Home = window.httpVueLoader('./components/Home.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Connexion = window.httpVueLoader('./components/Connexion.vue')
 const Livres = window.httpVueLoader('./components/Livres.vue')
+const Recherche = window.httpVueLoader('./components/Recherche.vue')
 
 
 const routes = [
   { path: '/', component: Connexion },
   { path: '/Home', component: Home },
   { path: '/Home/panier', component: Panier },
-  { path: '/Home/Livres', component: Livres }
+  { path: '/Home/Livres', component: Livres },
+  { path: '/Home/Recherche', component: Recherche }
 ]
 
 const router = new VueRouter({
@@ -19,6 +22,7 @@ var app = new Vue({
   router,
   el: '#app',
   data: {
+    isConnected : false,
     articles: [],
     panier: {
       createdAt: null,
@@ -33,6 +37,10 @@ var app = new Vue({
     // this.panier = res2.data
   },
   methods: {
+    async connex(){
+      this.isConnected = !this.isConnected
+      console.log(this.isConnected)
+    },
     async addArticle (article) {
       const res = await axios.post('/api/article', article)
       this.articles.push(res.data)
@@ -49,6 +57,7 @@ var app = new Vue({
       await axios.delete('/api/article/' + articleId)
       const index = this.articles.findIndex(a => a.id === articleId)
       this.articles.splice(index, 1)
+      
     }
   }
 })

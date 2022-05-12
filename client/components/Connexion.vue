@@ -1,35 +1,35 @@
 <template>
     <Body>
-        <form id="formulaire">  
+        <form v-on:submit.prevent="connex" id="formulaire" v-if="isconnected == false">  
 			<div id="textInfo">
 				<input type="text" id="Username" class="button" name="Username" placeholder="Username" required> 
 				<input type="password" id="Password" class="button" name="Password" placeholder="Password" required> 
 			</div>
 			<br>
             <input type="submit" class="button" id="Create" value="Create account" >
-			<input type="submit" class="button" id="Connexion" value="Connexion             "  >
+			<input type="submit" class="button" id="Connexion" value="Connexion" >
 		</form>
     </Body>
 </template>
 
-<!--
-<script>
-import { photos } from '../../server/data/photos'
 
-export default({
+<script>
+module.exports = {
 	data() {
-		//console.log(this.photos[1])
-		return{
-			photos
+		return {
 		}
-	
 	},
-	computed:{
-		phototest(){ console.log(this.photos)
+	props : {
+		isconnected : Boolean
+	},
+	methods : {
+		connex(){
+			this.$emit("connex")
 		}
 	}
-})
-</script> -->
+}
+
+</script>
 
 <style scoped>
 #backG {

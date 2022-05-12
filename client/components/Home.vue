@@ -7,6 +7,6 @@
       <p>deconnexion</p>
     </div>
   </header>
-  on est sur le home zizi
+  on est sur le home
 </div>
 </template>

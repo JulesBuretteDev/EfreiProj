@@ -12,16 +12,23 @@
     <body>
         <div id="app">
           <header>
-            <h1>Efrei Books</h1>
+            <div id="deco" v-on:click="connex"  v-if="isConnected == true"> Deconnexion </div>
+            <div id="headDisp">
+              <img id="imgHead" src="efreiLogo.png" alt="EfreiLogo">
+              <h1>Efrei Books</h1>
+            </div>
+            <nav v-if="isConnected == true">
+              <router-link to="/home/livres">livres</router-link>
+              <router-link to="/home/panier">Panier</router-link>
+              <router-link to="/home/Recherche">Recherche</router-link>
+            </nav>
           </header>
-          <nav>
-            <router-link to="/home/livres">livres</router-link>
-            <router-link to="/home/panier">Panier</router-link>
-            <router-link to="/">Deconnexion</router-link>
-          </nav>
+          
           <main>
             <router-view
               :articles="articles"
+              :isconnected = "isConnected"
+              @connex="connex"
             ></router-view>
           </main>
         </div>
@@ -30,9 +37,32 @@
 </html>
 <style>
 header{
+  display:flex;
+  flex-direction: column;
+  background: linear-gradient(#037df7, #4c749b, #d4d4d4);
+	filter: drop-shadow(5px 5px 5px black);
+}
+#headDisp{
+  display: flex;
+  justify-content: space-between;
   font-family:monospace;
-  font-size: 150%;
+  font-size: 300%;
   text-align: center;
-	filter: drop-shadow(10px 10px 10px black);
+	filter: drop-shadow(5px 5px 5px rgb(255, 255, 255));
+}
+#imgHead{
+  width: 30%;
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  font-size: xx-large;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: dimgray;
+  cursor:grab;
+}
+#deco {
+  top: 0%;
+  right: 0%;
 }
 </style>
