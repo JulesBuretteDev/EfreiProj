@@ -1,9 +1,8 @@
 <template>
   <div>
   <div id="searchBar">
-          <input type="text" placeholder="Recherche">
-          <input type="button" value="rechercher">
-          <input type="button" value="cancel">
+          <input class="btnBar" type="text" placeholder="Recherche" v-model="nomRecherche">
+          <input class="btnBar" type="button" value="rechercher" v-on:click="searchBook">
       </div>
     <article v-for="book in books" :key="book.id">
       <div class="book-img">
@@ -13,10 +12,10 @@
       <div class="book-content" v-if="editingBook.id !== book.id">
         <div class="book-title">
           <h2>{{ book.name }}  de  {{ book.author }}</h2>
-          <div>
-          <button @click="deleteBook(book.id)">Supprimer</button>
-          <button @click="editBook(book)">Modifier</button>
-          <button @click="addPanier(book)">Ajouter au Panier</button>
+          <div id="btnMod">
+            <button id="btnInMod" @click="deleteBook(book.id)">Supprimer</button>
+            <button id="btnInMod" @click="editBook(book)">Modifier</button>
+            <button id="btnInMod" @click="addPanier(book)">Ajouter au Panier</button>
           </div>
         </div>
         <p>{{ book.description }}</p>
@@ -33,13 +32,14 @@
         <input type="text" v-model="editingBook.image" placeholder="Lien vers l'image">
       </div>
     </article>
-    <!--<add-book @add-book='addBook'></add-book>-->
+    <add-book @add-book='addBook' v-if="user.actif === 'admin'"></add-book>
   </div>
 </template>
 
 <script>
 module.exports = {
   props: {
+    user:{type: Object},
     books: { type: Array, default: [] },
     panier: { type: Object }
   },
@@ -55,7 +55,9 @@ module.exports = {
       bookToAddToCart: {
         id: -1,
         quantity : 1
-      }
+      },
+      nomRecherche:''
+      
     }
   },
   methods: {
@@ -88,6 +90,9 @@ module.exports = {
     addPanier (book) {
       this.bookToAddToCart.id = book.id
       this.$emit('add-book-cart', this.bookToAddToCart)
+    },
+    searchBook(){
+      this.$emit('searchbook', this.nomRecherche)
     }
   },
   components:{
@@ -102,8 +107,17 @@ article {
   border: solid black;
   margin: 5px;
   box-shadow: 5px 5px 5px black;
+  background-color: white;
 }
 
+#btnMod{
+  display: flex;
+  flex-direction: column;
+}
+#btnInMod{
+  padding: 5px;
+  margin: 5px;
+}
 .book-img {
   flex: 1;
 }
@@ -129,5 +143,9 @@ textarea {
 #searchBar {
     text-align: center;
     margin: 5%;
+}
+.btnBar{
+    padding: 10px;
+    border-radius: 10px;
 }
 </style>

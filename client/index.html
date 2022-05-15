@@ -1,6 +1,5 @@
 <!doctype>
 <html lang="fr">
-  <!--<img src="/components/ciel-bleu-01.jpg" id="imgBG">-->
     <head>
         <meta charset="utf-8">
         <title>EfreiBooks</title>
@@ -14,18 +13,18 @@
     <body>
         <div id="app">
           <header>
-            <div id="headDisp">
-              <div id="deco" v-on:click="goConnex(),connex()"  v-if="isConnected == true"> Deconnexion </div>
-              <!--<div> bienvenue {{connexionPers.email}}</div>-->
+            <div id="headDisp" v-if="isConnected == true">
+              <div id="deco" v-on:click="goConnex(),connex()"  > Deconnexion </div>
+              <div> bienvenue {{user.actif}} {{user.name}} {{user.surname}}</div>
             </div>
             
-            <div id="headDisp">
+            <div id="headDispPlus">
               <img id="imgHead" src="efreiLogo.png" alt="EfreiLogo" v-on:click="goHome">
               <h1 id="efreiTitre" v-on:click="goHome">Efrei Books</h1>
             </div>
             <nav v-if="isConnected == true">
-              <router-link to="/home/livres">livres</router-link>
-              <router-link to="/home/panier">Panier</router-link>
+              <router-link to="/home/livres" id="navText">livres</router-link>
+              <router-link to="/home/panier" id="navText">Panier</router-link>
             </nav>
           </header>
           
@@ -33,6 +32,7 @@
             <router-view
               :books="books"
               :isconnected = "isConnected"
+              :user = "user"
               @connex="connex"
               @add-book="addBook"
               @delete-book="deleteBook"
@@ -40,7 +40,8 @@
               @add-book-cart="addBookCart"
               @update-from-panier="editBookInCart"
               @remove-from-cart="removeFromPanier"
-              @testConnexion="testConnexion"
+              @connexion="testConnexion"
+              @searchbook="searchBook"
             ></router-view>
           </main>
         </div>
@@ -49,16 +50,28 @@
     
 </html>
 <style>
+html{
+  background-image: url("components/ciel-bleu-01.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 header{
   display:flex;
   flex-direction: column;
   background: linear-gradient(#037df7, #4c749b, #d4d4d4);
 	filter: drop-shadow(5px 5px 5px black);
+  border-radius: 100px;
 }
 #headDisp{
   display: flex;
+  justify-content: space-around;
+  color: white;
+  font-size: larger;
+}
+#headDispPlus{
+  display: flex;
   justify-content: space-between;
-  
+  filter: drop-shadow(5px 5px 5px white);
 }
 #imgHead{
   width: 30%;
@@ -66,21 +79,19 @@ header{
 nav {
   display: flex;
   justify-content: space-around;
+  background-color: #d4d4d4;
+  border-radius: 100px;
+}
+#navText{
   font-size: xx-large;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: dimgray;
-  cursor:grab;
   font-style: italic;
-  background-color: #d4d4d4;
+  text-decoration: none;
 }
-
-nav:hover,
-nav:active {
-  cursor: default;
-}
-#deco {
-  top: 0%;
-  right: 0%;
+#navText:hover{
+  
+	filter: drop-shadow(5px 5px 5px rgb(0, 0, 0));
 }
 #efreiTitre{
   margin-right: 5%;
@@ -89,13 +100,8 @@ nav:active {
   text-align: center;
 	filter: drop-shadow(5px 5px 5px rgb(255, 255, 255));
 }
-#imgBG{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: auto;
-  opacity: 10%;
-  z-index: 0;
+
+#deco{
+  cursor: pointer;
 }
 </style>

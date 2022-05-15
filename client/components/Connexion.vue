@@ -45,9 +45,7 @@ module.exports = {
 		}
 	},
 	props : {
-		isconnected : Boolean//,
-		//wrongconnex : Boolean,
-		//wronginscri : Boolean
+		isconnected : Boolean
 	},
 	methods : {
 		connex(){
@@ -64,10 +62,8 @@ module.exports = {
 			const createAcc = await axios.post('/api/inscription', this.inscriptionPers)
 		},
 		testConnexion() {
-			console.log("ok")
-			this.$emit('Connexion', this.connexionPers)
-			console.log("ok2")
-			}
+			this.$emit('connexion', this.connexionPers)
+		}
 
 	}
 }
@@ -87,6 +83,7 @@ form {
 	filter: drop-shadow(10px 10px 10px black);
 	text-align: center;
     margin: 10%;
+	border-radius: 50px;
 }
 .button {
 	border: none;
@@ -95,5 +92,6 @@ form {
 	padding: 20px;
 	margin: 20px;
 	min-width: 20%;
+	border-radius: 10px;
 }
 </style>	

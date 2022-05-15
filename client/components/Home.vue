@@ -5,7 +5,7 @@
     </h1>
     
     <div>
-      Il est posible ici de regarder et de pouvoir louer les livres disponibles de l'efrei
+      Pour pouvoir acheter les livres de l'EFREI PARIS
     </div>
 </div>
 </template>
@@ -18,8 +18,8 @@
   text-align: center;
   align-items: center;
   top: 40%;
-  font-size: 150%;
-  color: rgb(29, 141, 175);
+  font-size: 300%;
+  color: white;
   height: 100%;
   width: 100%;
 }

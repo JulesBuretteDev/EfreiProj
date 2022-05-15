@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const mysql  =  require('mysql')
+const { NULL } = require('mysql/lib/protocol/constants/types')
+const bcrypt = require("bcrypt")
 
 const db = mysql.createConnection({
   host : 'localhost',
@@ -22,52 +24,38 @@ class Panier {
   }
 }
 
-router.use((req, res, next) => {
-  // l'utilisateur n'est pas reconnu, lui attribuer un panier dans req.session
-  if (typeof req.session.panier === 'undefined') {
-    req.session.panier = new Panier()
-  }
-  next()
-})
 
-router.post('/inscription',(req,res) =>{
+
+router.post('/inscription', async (req,res) =>{
   
-  const email = [req.body.email]
+  const email = req.body.email
   const password = req.body.password
-  let promiseQuery = new Promise(async (resolve ) =>{
-    const hash = await bcrypt.hash(password, 10);
-    resolve({hash})
-  })
+  const hash = await bcrypt.hash(password, 10);
   const inscript = [[
     req.body.email,
-    promiseQuery,
-    req.body.actif,
+    hash,
+    'user',
     req.body.name,
     req.body.surname
   ]]
-  try {
-    db.query("SELECT email FROM users WHERE email = ? ",[email], (err, result) => {
+    db.query("SELECT email FROM user WHERE email = ? ",[email], (err, result) => {
       if (err ) throw err;
-      console.log(result[0].email)
-      console.log(this.email)
-      if(result[0].email != email){
-        db.query("INSERT INTO users (email, password, actif, name, surname) values ? ", [inscript],(err, result, fields) => {
+      //console.log(result[0].email)
+      console.log(result)
+      console.log(result.length)
+      if(result.length == 0){
+        db.query("INSERT INTO user (email, password, actif, name, surname) values ? ", [inscript],(err, result, fields) => {
         console.log("le compte a bien été creer");
-        res.status(200).json('OK')
         if (err) throw err
       })
-          
-        
       }
       else{console.log("le compte existe deja ")}
-      res.status(400).json('ko')
+      
     })
-  }
-  catch(err){
-    console.log("network error 2", err)
-  }
+    res.status(200).json("ok")
+  })
   
-})
+  
 
 router.post("/connexion", async (req, res) =>{
 
@@ -81,7 +69,7 @@ router.post("/connexion", async (req, res) =>{
   let promiseQuery = new Promise(async (resolve, reject ) =>{
     console.log(email);
     var emailConnexion = [[email]];
-    db.query('SELECT * FROM users WHERE email = ? ', [emailConnexion], async (err, res) => {
+    db.query('SELECT * FROM user WHERE email = ? ', [emailConnexion], async (err, res) => {
       console.log(res);
       if (err) reject(err);
       else{
@@ -94,7 +82,10 @@ router.post("/connexion", async (req, res) =>{
               
               resolve({
                 id : res[0].id_user,
-                email: res[0].email
+                email: res[0].email,
+                name : res[0].name,
+                surname : res[0].surname,
+                actif : res[0].actif
               });
             }else{
               reject();
@@ -127,11 +118,9 @@ router.use((req, res, next) => {
 })
 router.get('/books', (req, res) => {
   try {
-    //db.connect( ()=>{
-      db.query("SELECT * FROM books", (err, result) => {
-        res.json(result)
-      })
-    //}) 
+    db.query("SELECT * FROM book", (err, result) => {
+      res.json(result)
+    })
   }
   catch(err){
     console.log("network error", err)
@@ -160,19 +149,26 @@ router.post('/books', (req, res) => {
   console.log(records)
 
   try {
-    //db.connect( (err)=>{
-      db.query("INSERT INTO books (name, description, image, availlability, author) values ?", [records],(err, result, fields) => {
-        if (err) throw err
-     
-        console.log('result ' +result);
-        res.json('OK')
-        })
-    //}) 
+    db.query("INSERT INTO book (name, description, image, availlability, author) values ?", [records],(err, result, fields) => {
+      if (err) throw err
+    
+      console.log('result ' +result);
+      res.json('OK')
+      })
+    
 
   }
   catch(err){
     console.log("network error", err)
   }
+})
+
+router.get('/livres/recherche/:nomLivreRecherche', async(req, res) => {
+  var titreCherche = req.params.nomLivreRecherche
+  db.query("SELECT * FROM book WHERE name LIKE '%" + titreCherche +"%'", function (err, result){
+    if(err) throw err;
+    res.json(result)
+  })
 })
 
 
