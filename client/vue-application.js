@@ -21,21 +21,24 @@ var app = new Vue({
   router,
   el: '#app',
   data: {
-    isConnected : true,
-    //wrongInscri : false, pb ici
-    //wrongConnex : false,
+    isConnected : false,
     books: [],
     panier: {
       createdAt: null,
       updatedAt: null,
       books: []
+    },
+    user : {
+      email :'',
+      password:'',
+      actif:'',
+      name:'',
+      surname:''
     }
   },
   async mounted () {
     const res = await axios.get('/api/books')
     this.books = res.data
-    // const res2 = await axios.get('/api/panier')
-    // this.panier = res2.data
   },
   methods: {
     async connex(){
@@ -82,11 +85,17 @@ var app = new Vue({
       await axios.post('/api/Connexion', data).then(async response => {
           this.user = response.data.data;
           this.panier.articles = response.data.panier;
+          this.isConnected = !this.isConnected
           router.replace('/home');
+          console.log(this.user)
       }).catch(error => {
           alert('Informations non valides !')
           //this.wrongInscri = true plutot ici
       });
-  }
+    },
+    async searchBook(nomRecherche){
+      let resul = await axios.get('/api/livres/recherche/'+nomRecherche)
+      this.books = resul.data
+    }
   }
 })
