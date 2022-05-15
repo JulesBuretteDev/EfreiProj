@@ -1,5 +1,6 @@
 <!doctype>
 <html lang="fr">
+  <!--<img src="/components/ciel-bleu-01.jpg" id="imgBG">-->
     <head>
         <meta charset="utf-8">
         <title>EfreiBooks</title>
@@ -8,32 +9,44 @@
         <script src="https://cdn.jsdelivr.net/npm/http-vue-loader/src/httpVueLoader.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue-router/dist/vue-router.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        
     </head>
     <body>
         <div id="app">
           <header>
-            <div id="deco" v-on:click="connex"  v-if="isConnected == true"> Deconnexion </div>
             <div id="headDisp">
-              <img id="imgHead" src="efreiLogo.png" alt="EfreiLogo">
-              <h1>Efrei Books</h1>
+              <div id="deco" v-on:click="goConnex(),connex()"  v-if="isConnected == true"> Deconnexion </div>
+              <!--<div> bienvenue {{connexionPers.email}}</div>-->
+            </div>
+            
+            <div id="headDisp">
+              <img id="imgHead" src="efreiLogo.png" alt="EfreiLogo" v-on:click="goHome">
+              <h1 id="efreiTitre" v-on:click="goHome">Efrei Books</h1>
             </div>
             <nav v-if="isConnected == true">
               <router-link to="/home/livres">livres</router-link>
               <router-link to="/home/panier">Panier</router-link>
-              <router-link to="/home/Recherche">Recherche</router-link>
             </nav>
           </header>
           
           <main>
             <router-view
-              :articles="articles"
+              :books="books"
               :isconnected = "isConnected"
               @connex="connex"
+              @add-book="addBook"
+              @delete-book="deleteBook"
+              @update-book="updateBook"
+              @add-book-cart="addBookCart"
+              @update-from-panier="editBookInCart"
+              @remove-from-cart="removeFromPanier"
+              @testConnexion="testConnexion"
             ></router-view>
           </main>
         </div>
         <script src="/vue-application.js"></script>
     </body>
+    
 </html>
 <style>
 header{
@@ -45,10 +58,7 @@ header{
 #headDisp{
   display: flex;
   justify-content: space-between;
-  font-family:monospace;
-  font-size: 300%;
-  text-align: center;
-	filter: drop-shadow(5px 5px 5px rgb(255, 255, 255));
+  
 }
 #imgHead{
   width: 30%;
@@ -60,9 +70,32 @@ nav {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: dimgray;
   cursor:grab;
+  font-style: italic;
+  background-color: #d4d4d4;
+}
+
+nav:hover,
+nav:active {
+  cursor: default;
 }
 #deco {
   top: 0%;
   right: 0%;
+}
+#efreiTitre{
+  margin-right: 5%;
+  font-family:monospace;
+  font-size: 600%;
+  text-align: center;
+	filter: drop-shadow(5px 5px 5px rgb(255, 255, 255));
+}
+#imgBG{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  opacity: 10%;
+  z-index: 0;
 }
 </style>

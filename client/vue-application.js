@@ -3,15 +3,14 @@ const Home = window.httpVueLoader('./components/Home.vue')
 const Panier = window.httpVueLoader('./components/Panier.vue')
 const Connexion = window.httpVueLoader('./components/Connexion.vue')
 const Livres = window.httpVueLoader('./components/Livres.vue')
-const Recherche = window.httpVueLoader('./components/Recherche.vue')
+const AddBook= window.httpVueLoader('./components/addBook.vue')
 
 
 const routes = [
   { path: '/', component: Connexion },
   { path: '/Home', component: Home },
   { path: '/Home/panier', component: Panier },
-  { path: '/Home/Livres', component: Livres },
-  { path: '/Home/Recherche', component: Recherche }
+  { path: '/Home/Livres', component: Livres }
 ]
 
 const router = new VueRouter({
@@ -22,17 +21,19 @@ var app = new Vue({
   router,
   el: '#app',
   data: {
-    isConnected : false,
-    articles: [],
+    isConnected : true,
+    //wrongInscri : false, pb ici
+    //wrongConnex : false,
+    books: [],
     panier: {
       createdAt: null,
       updatedAt: null,
-      articles: []
+      books: []
     }
   },
   async mounted () {
-    const res = await axios.get('/api/articles')
-    this.articles = res.data
+    const res = await axios.get('/api/books')
+    this.books = res.data
     // const res2 = await axios.get('/api/panier')
     // this.panier = res2.data
   },
@@ -41,23 +42,51 @@ var app = new Vue({
       this.isConnected = !this.isConnected
       console.log(this.isConnected)
     },
-    async addArticle (article) {
-      const res = await axios.post('/api/article', article)
-      this.articles.push(res.data)
+    async goConnex(){
+      this.$router.push('/'); 
     },
-    async updateArticle (newArticle) {
-      await axios.put('/api/article/' + newArticle.id, newArticle)
-      const article = this.articles.find(a => a.id === newArticle.id)
-      article.name = newArticle.name
-      article.description = newArticle.description
-      article.image = newArticle.image
-      article.price = newArticle.price
+    async goHome(){
+      this.$router.push('/home'); 
     },
-    async deleteArticle (articleId) {
-      await axios.delete('/api/article/' + articleId)
-      const index = this.articles.findIndex(a => a.id === articleId)
-      this.articles.splice(index, 1)
-      
-    }
+    
+    async addBook (book) {
+      const res = await axios.post('/api/book', book)
+      this.books.push(res.data)
+    },
+    async updateBook (newBook) {
+      await axios.put('/api/book/' + newBook.id, newBook)
+      const book = this.books.find(a => a.id === newBook.id)
+      book.name = newBook.name
+      book.description = newBook.description
+      book.image = newBook.image
+      book.price = newBook.price
+    },
+    async deleteBook (bookId) {
+      await axios.delete('/api/book/' + bookId)
+      const index = this.books.findIndex(a => a.id === bookId)
+      this.books.splice(index, 1)
+    },
+    async addBookCart(book){
+      const res = await axios.post('api/panier/', book)
+      this.panier = res.data
+    },
+    async editBookInCart(newBook) {
+      const res = await axios.put(`/api/panier/${newBook.id}`, newBook)
+      this.panier = res.data
+    },
+    async removeFromPanier(id){
+      const res = await axios.delete(`/api/panier/${id}`)
+      this.panier = res.data
+    },
+    async testConnexion(data) {
+      await axios.post('/api/Connexion', data).then(async response => {
+          this.user = response.data.data;
+          this.panier.articles = response.data.panier;
+          router.replace('/home');
+      }).catch(error => {
+          alert('Informations non valides !')
+          //this.wrongInscri = true plutot ici
+      });
+  }
   }
 })

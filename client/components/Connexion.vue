@@ -1,14 +1,27 @@
 <template>
     <Body>
-        <form v-on:submit.prevent="connex" id="formulaire" v-if="isconnected == false">  
-			<div id="textInfo">
-				<input type="text" id="Username" class="button" name="Username" placeholder="Username" required> 
-				<input type="password" id="Password" class="button" name="Password" placeholder="Password" required> 
-			</div>
-			<br>
-            <input type="submit" class="button" id="Create" value="Create account" >
-			<input type="submit" class="button" id="Connexion" value="Connexion" >
-		</form>
+		<div>
+			<form v-on:submit.prevent="testConnexion" id="formulaire" v-if="CreateAccount == false">  
+				<div id="textInfo">
+					<input type="email" id="Username" class="button" name="mail" placeholder="Username" v-model="connexionPers.email" required> 
+					<input type="password" id="Password" class="button" name="Password" placeholder="Password" v-model="connexionPers.password" required> 
+				</div>
+				<br>
+				<input type="button" class="button" id="change" value="Create account" v-on:click="windowSwitch">
+				<input type="submit" class="button" id="Connexion" value="Connexion">
+				
+			</form>
+			<form  v-on:submit.prevent="CreateAccountdb" id="inscription"  v-if="CreateAccount == true">
+				<input type="email" id="mail" class="button" name="mail" placeholder="email adress" v-model="inscriptionPers.email" required> 
+				<input type="password" id="Password" class="button" name="Password" placeholder="Password" v-model="inscriptionPers.password" required> 
+				<input type="text" id="name" class="button" name="name" placeholder="name" v-model="inscriptionPers.name" required> 
+				<input type="text" id="surname" class="button" name="suname" placeholder="surname" v-model="inscriptionPers.surname" required> 
+				<br>
+				<input type="button" class="button" id="change" value="Connect to account" v-on:click="windowSwitch">
+				<input type="submit" class="button" id="Connexion" value="inscription">
+				
+			</form>
+		</div>
     </Body>
 </template>
 
@@ -17,15 +30,45 @@
 module.exports = {
 	data() {
 		return {
+			CreateAccount : false,
+			inscriptionPers :{
+				email :'',
+				password:'',
+				actif:'user',
+				name:'',
+				surname:''
+			},
+			connexionPers: {
+				email:'',
+				password:''
+			}
 		}
 	},
 	props : {
-		isconnected : Boolean
+		isconnected : Boolean//,
+		//wrongconnex : Boolean,
+		//wronginscri : Boolean
 	},
 	methods : {
 		connex(){
 			this.$emit("connex")
-		}
+		},
+		goHome(){
+			this.$router.push('/home'); 
+			this.$emit("connex")
+    	},
+		windowSwitch(){
+			this.CreateAccount = !this.CreateAccount
+		},
+		async CreateAccountdb(){
+			const createAcc = await axios.post('/api/inscription', this.inscriptionPers)
+		},
+		testConnexion() {
+			console.log("ok")
+			this.$emit('Connexion', this.connexionPers)
+			console.log("ok2")
+			}
+
 	}
 }
 
@@ -46,11 +89,11 @@ form {
     margin: 10%;
 }
 .button {
-	text-transform: uppercase;
 	border: none;
 	filter: drop-shadow(5px 5px 5px grey);
 	background-color: #f3f6f4;
 	padding: 20px;
 	margin: 20px;
+	min-width: 20%;
 }
 </style>	
